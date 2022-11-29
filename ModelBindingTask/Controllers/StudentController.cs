@@ -19,30 +19,45 @@ namespace ModelBindingTask.Controllers
             var employee = db.Students.ToList();
             return View(employee);
         }
+
+
+        [HttpGet]
         public ActionResult Create()
         {
             return View();
         }
 
+        //From Form 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection std)
+        public IActionResult Create (Student s)
         {
-            if (ModelState.IsValid)
-            {
-                Student student = new Student();
-                student.Name = std["Name"];
-                student.Age = std["Age"];
-                //student.Age =Convert.ToInt32(formCollection["Age"]);
-                student.City = std["City"];
-
-                db.Students.Add(student);
-                db.SaveChanges();
-                RedirectToAction("Index");
-            }
-
-            return View();
+            var emp= "Name = " + s.Name + "Age =" + s.Age  + "City =" + s.City ;
+            db.Students.Add(s);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
+
+       
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Create(IFormCollection std)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        Student student = new Student();
+        //        student.Name = std["Name"];
+        //        student.Age = std["Age"];
+        //        //student.Age =Convert.ToInt32(formCollection["Age"]);
+        //        student.City = std["City"];
+
+        //        db.Students.Add(student);
+        //        db.SaveChanges();
+        //        RedirectToAction("Index");
+        //    }
+
+        //    return View();
+        //}
 
 
 
@@ -50,7 +65,7 @@ namespace ModelBindingTask.Controllers
         public IActionResult Edit(Student student)
         {
             var edit = db.Students.Where(x => x.Id == student.Id);
-            return View(edit);
+            return View(student);
         }
 
 
@@ -140,13 +155,13 @@ namespace ModelBindingTask.Controllers
             return View();
         }
 
-        /// <summary>
-        /// /////////////
-        /// </summary>
-        /// <param name="std"></param>
-        /// <returns></returns>
 
-        //From Form
+        public ActionResult<Student> FromForm()
+        {
+            return View();
+        }
+
+        //From Form method
         [HttpPost]
         public ActionResult<Student> FromForm([FromForm] Student std)
         {
